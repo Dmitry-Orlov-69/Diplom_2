@@ -1,6 +1,7 @@
-import pytest
 import requests
 import allure
+from urls import INGREDIENTS_ENDPOINT, LOGIN_ENDPOINT, ORDERS_ENDPOINT
+from helpers import get_ingredients
 
 class TestOrderCreation:
     @allure.title("Создание заказа с авторизацией")
@@ -9,22 +10,16 @@ class TestOrderCreation:
             email = unique_user['user_data']['email']
             password = unique_user['user_data']['password']
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/auth/login',
+                LOGIN_ENDPOINT,
                 json={
                     "email": email,
                     "password": password
                 }
             )
-            assert response.status_code == 200
             token = response.json()['accessToken']
 
         with allure.step("Запрос данных об ингредиентах"):
-            ingredients_response = requests.get(
-                'https://stellarburgers.education-services.ru/api/ingredients',
-                headers={'Authorization': f'Token {token}'}
-            )
-            assert ingredients_response.status_code == 200
-            ingredients = ingredients_response.json()
+            ingredients = get_ingredients(token)
 
         with allure.step("Создание заказа"):
             order_data = {
@@ -32,20 +27,20 @@ class TestOrderCreation:
             }
 
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/orders',
+                ORDERS_ENDPOINT,
                 json=order_data,
                 headers={'Authorization': f'Token {token}'}
             )
 
-            assert response.status_code == 200
             order = response.json()
+            assert response.status_code == 200
             assert 'order' in order
 
     @allure.title("Создание заказа без авторизации")
     def test_create_order_without_authorization(self):
         with allure.step("Запрос данных об ингредиентах без авторизации"):
             ingredients_response = requests.get(
-                'https://stellarburgers.education-services.ru/api/ingredients'
+                INGREDIENTS_ENDPOINT
             )
             assert ingredients_response.status_code == 200
             ingredients = ingredients_response.json()
@@ -55,7 +50,7 @@ class TestOrderCreation:
                 "ingredients": [ingredients['data'][0]['_id'], ingredients['data'][1]['_id']],
             }
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/orders',
+                ORDERS_ENDPOINT,
                 json=order_data
             )
 
@@ -67,35 +62,30 @@ class TestOrderCreation:
             email = unique_user['user_data']['email']
             password = unique_user['user_data']['password']
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/auth/login',
+                LOGIN_ENDPOINT,
                 json={
                     "email": email,
                     "password": password
                 }
             )
-            assert response.status_code == 200
             token = response.json()['accessToken']
 
         with allure.step("Запрос данных об ингредиентах"):
-            ingredients_response = requests.get(
-                'https://stellarburgers.education-services.ru/api/ingredients',
-                headers={'Authorization': f'Token {token}'}
-            )
-            assert ingredients_response.status_code == 200
-            ingredients = ingredients_response.json()
+            ingredients = get_ingredients(token)
 
         with allure.step("Создание заказа"):
             order_data = {
                 "ingredients": [ingredients['data'][0]['_id'], ingredients['data'][1]['_id']],
             }
+
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/orders',
+                ORDERS_ENDPOINT,
                 json=order_data,
                 headers={'Authorization': f'Token {token}'}
             )
 
-            assert response.status_code == 200
             order = response.json()
+            assert response.status_code == 200
             assert 'order' in order
 
     @allure.title("Создание заказа без ингредиентов")
@@ -104,7 +94,7 @@ class TestOrderCreation:
             email = unique_user['user_data']['email']
             password = unique_user['user_data']['password']
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/auth/login',
+                LOGIN_ENDPOINT,
                 json={
                     "email": email,
                     "password": password
@@ -116,7 +106,7 @@ class TestOrderCreation:
         with allure.step("Попытка создать заказ без ингредиентов"):
             order_data = {}
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/orders',
+                ORDERS_ENDPOINT,
                 json=order_data,
                 headers={'Authorization': f'Token {token}'}
             )
@@ -129,7 +119,7 @@ class TestOrderCreation:
             email = unique_user['user_data']['email']
             password = unique_user['user_data']['password']
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/auth/login',
+                LOGIN_ENDPOINT,
                 json={
                     "email": email,
                     "password": password
@@ -143,7 +133,7 @@ class TestOrderCreation:
                 "ingredients": ["invalid_hash"]
             }
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/orders',
+                ORDERS_ENDPOINT,
                 json=order_data,
                 headers={'Authorization': f'Token {token}'}
             )

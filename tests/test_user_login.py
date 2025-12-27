@@ -1,6 +1,6 @@
 import allure
-import pytest
 import requests
+from urls import LOGIN_ENDPOINT
 
 class TestUserLogin:
     @allure.title("Вход под существующим пользователем")
@@ -11,7 +11,7 @@ class TestUserLogin:
 
         with allure.step("Попытка авторизоваться с существующим пользователем"):
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/auth/login',
+                LOGIN_ENDPOINT,
                 json={
                     "email": email,
                     "password": password
@@ -31,7 +31,7 @@ class TestUserLogin:
 
         with allure.step("Попытка авторизоваться с неверными данными"):
             response = requests.post(
-                'https://stellarburgers.education-services.ru/api/auth/login',
+                LOGIN_ENDPOINT,
                 json={
                     "email": email,
                     "password": password
