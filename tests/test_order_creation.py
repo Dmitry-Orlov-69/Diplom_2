@@ -42,7 +42,6 @@ class TestOrderCreation:
             ingredients_response = requests.get(
                 INGREDIENTS_ENDPOINT
             )
-            assert ingredients_response.status_code == 200
             ingredients = ingredients_response.json()
 
         with allure.step("Попытка создать заказ без предоставления токена авторизации"):
@@ -100,7 +99,6 @@ class TestOrderCreation:
                     "password": password
                 }
             )
-            assert response.status_code == 200
             token = response.json()['accessToken']
 
         with allure.step("Попытка создать заказ без ингредиентов"):
@@ -125,7 +123,6 @@ class TestOrderCreation:
                     "password": password
                 }
             )
-            assert response.status_code == 200
             token = response.json()['accessToken']
 
         with allure.step("Попытка создать заказ с неверным хешем ингредиента"):

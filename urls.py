@@ -1,5 +1,7 @@
-REGISTER_ENDPOINT = 'https://stellarburgers.education-services.ru/api/auth/register'
-DELETE_USER_ENDPOINT = 'https://stellarburgers.education-services.ru/api/auth/user'
-LOGIN_ENDPOINT = 'https://stellarburgers.education-services.ru/api/auth/login'
-INGREDIENTS_ENDPOINT = 'https://stellarburgers.education-services.ru/api/ingredients'
-ORDERS_ENDPOINT = 'https://stellarburgers.education-services.ru/api/orders'
+BASE_URL = 'https://stellarburgers.education-services.ru/api'
+
+REGISTER_ENDPOINT = f'{BASE_URL}/auth/register'
+DELETE_USER_ENDPOINT = f'{BASE_URL}/auth/user'
+LOGIN_ENDPOINT = f'{BASE_URL}/auth/login'
+INGREDIENTS_ENDPOINT = f'{BASE_URL}/ingredients'
+ORDERS_ENDPOINT = f'{BASE_URL}/orders'
